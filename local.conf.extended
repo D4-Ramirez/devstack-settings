@@ -1,0 +1,59 @@
+[[local|localrc]]
+
+# Environment
+TARGET_BRANCH=stable/2023.2
+
+# Password
+ADMIN_PASSWORD=<password>
+DATABASE_PASSWORD=$ADMIN_PASSWORD
+RABBIT_PASSWORD=$ADMIN_PASSWORD
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+
+# Logging
+LOG_COLOR=False
+LOGFILE=$DEST/logs/stack.sh.log
+
+# Network
+IP_VERSION=4
+HOST_IP=<host-ip>
+Q_FLOATING_ALLOCATION_POOL=start=<network-start>,end=<network-end>
+FLOATING_RANGE=<network>/<mask>
+PUBLIC_NETWORK_GATEWAY=<gateway>
+PUBLIC_INTERFACE=<network-interface>
+
+## Bridge network config
+Q_ASSIGN_GATEWAY_TO_PUBLIC_BRIDGE=FALSE
+Q_USE_PROVIDERNET_FOR_PUBLIC=True
+OVS_PHYSICAL_BRIDGE=br-ex
+PUBLIC_BRIDGE=br-ex
+OVS_BRIDGE_MAPPINGS=public:br-ex
+
+# Software
+PIP_UPGRADE=True
+
+# Glance
+DOWNLOAD_DEFAULT_IMAGES=False
+IMAGE_URLS="http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img"
+
+# Trove
+enable_plugin trove https://opendev.org/openstack/trove $TARGET_BRANCH
+
+# Kuryr
+KURYR_CAPABILITY_SCOPE=local
+KURYR_PROCESS_EXTERNAL_CONNECTIVITY=False
+enable_plugin kuryr-libnetwork https://opendev.org/openstack/kuryr-libnetwork $TARGET_BRANCH
+
+# Zun
+ENABLE_CONTAINERD_CRI=True
+enable_plugin zun https://opendev.org/openstack/zun $TARGET_BRANCH
+enable_plugin zun-tempest-plugin https://opendev.org/openstack/zun-tempest-plugin
+enable_plugin devstack-plugin-container https://opendev.org/openstack/devstack-plugin-container $TARGET_BRANCH
+enable_plugin zun-ui https://opendev.org/openstack/zun-ui $TARGET_BRANCH
+LIBS_FROM_GIT=python-zunclient
+
+# Heat
+enable_plugin heat https://opendev.org/openstack/heat $TARGET_BRANCH
+
+# Swift
+SWIFT_HASH=123
+enable_service swift
